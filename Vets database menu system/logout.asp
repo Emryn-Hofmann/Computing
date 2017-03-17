@@ -8,7 +8,6 @@
     </head>
     <body>
         <p>You will be redirected to google in <span id="timeout"></span></p>
-
     </body>
 </html>
 <script>
