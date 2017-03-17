@@ -7,7 +7,7 @@
         <title></title>
     </head>
     <body>
-        <p>Wait for it...<span id="timeout"></span></p>
+        <p>You will be redirected to google in <span id="timeout"></span></p>
 
     </body>
 </html>
