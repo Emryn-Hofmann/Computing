@@ -1,21 +1,7 @@
+<!--#include file="dbConnection.inc"-->
+
 <%
  'declare the variables 
-Dim Connection
-Dim ConnectionStr
-Dim Recordset
-Dim SQL
-db_server = "localhost"
-db_name = "db1"
-db_username = "root"
-db_userpassword = "1saacNewton"
-SEmail = Request.Form("FEmail")
-SPassword = Request.Form("FPassword")
-connectstr = "Driver={MySQL ODBC 5.3 UNICODE Driver};SERVER=" & db_server & ";DATABASE=" & db_name & ";UID=" & db_username & ";PWD=" & db_userpassword
-
-Set Connection = Server.CreateObject("ADODB.Connection")
-Connection.Open connectstr
-Set Command = Server.CreateObject("ADODB.Command")
-Command.ActiveConnection = Connection
 Command.CommandText = "SELECT EMail, Pw, RegistrationId, FirstName, Surname FROM TblOwner WHERE Email = ? AND Pw = ?"
 Command.Parameters.Append Command.CreateParameter("SEmail", adVarchar, adParamInput, 512, SEmail)
 Command.Parameters.Append Command.CreateParameter("SPassword", adVarchar, adParamInput, 512, SPassword)
