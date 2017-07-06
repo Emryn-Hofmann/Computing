@@ -1,0 +1,114 @@
+<html>
+</html>
+<script>
+var U = [1, 2, 3, 4, 5, 6, 7];
+var A = [1, 4, 7];
+var B = [1, 4];
+var C = [4, 5, 7];
+var D = [3, 5, 6];
+var E = [2, 3, 6, 7];
+var F = [2, 7];
+var S = [A, B, C, D, E, F];
+var matrix = [[1,0,0,1,0,0,1],
+              [1,0,0,1,0,0,0],
+              [0,0,0,1,1,0,1],
+              [0,0,1,0,1,1,0],
+              [0,1,1,0,0,1,1], 
+              [0,1,0,0,0,0,1]];
+function solve(m) {
+  if (isEmpty(m)) {return true;}
+  var col = findLowestNumberOfOnesInAnyColumn(m);
+  var rows = findRowsWithOneInColumn(m, col);
+  if (rows.length === 0) {
+	return false;
+  }
+  var copiedMatrix = copyMatrix(m);
+  var chosenRow = 0;
+  rows[chosenRow];
+  var columnsWithOne = findColumnsWithOne(copiedMatrix, chosenRow);
+  copiedMatrix = removeRowsWithOne(copiedMatrix, columnsWithOne);
+  copiedMatrix = removeColumns(copiedMatrix, columnsWithOne);
+  console.table(copiedMatrix);
+  return solve(copiedMatrix);
+}
+
+function removeColumns(m,columnsWithOne) {
+	for (var c = 0; c < columnsWithOne.length; c++) {
+			// Remove this column from all rows
+			for (var row = 0; row < m.length; row++) {
+				m[row].splice(columnsWithOne[c]-c,1);
+				
+			}
+    } 
+	return m;
+}
+
+function removeRowsWithOne(m, cols) {
+	for (var row = 0; row < m.length; row++) {
+		for (var c = 0; c < cols.length; c++) {
+			if (m[row][cols[c]] === 1) {
+				m.splice(row,1);
+				row--;
+				break;
+			}
+		}
+    }
+	return m;
+}
+
+function findColumnsWithOne(m, row) {
+	var result = [];
+	for (var column = 0; column < m[row].length; column++) {
+		if (m[row][column] === 1) {
+			result.push(column);
+		}
+	}
+	return result;
+}
+
+function copyMatrix(m) {
+	var copy = [];
+	for (var r = 0; r < m.length; r++) {
+		copy[r] = [];
+		for (var c = 0; c < m[r].length; c++) {
+			copy[r][c] = m[r][c];
+		}
+	}
+	//console.table(copy);
+	return copy;
+}
+
+function findRowsWithOneInColumn(m, col) {
+	var rows = [];
+	for (var row = 0; row < m.length; row++) {
+      if (m[row][col] === 1) {
+        rows.push(row);
+      }
+    }
+	return rows;
+}
+function findLowestNumberOfOnesInAnyColumn(m) {
+  var minimum = m.length;
+  var lowestColumn = 0;
+  for (var col = 0; col < m[0].length; col++) {
+    var total = 0;
+    for (var row = 0; row < m.length; row++) {
+      if (m[row][col] === 1) {
+        total++;
+      }
+    }
+    if (total < minimum) {
+      minimum = total;
+      lowestColumn = col;
+    }
+  }
+  return lowestColumn;
+}
+
+function isEmpty(m) {
+  if (m.length === 0) {
+    return true;
+  }
+  return false;
+}
+</script>

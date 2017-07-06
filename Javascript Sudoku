@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description" content="Generated Sudoku">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <script src="Zepto/zepto.min.js"></script>
+  <title>Sudoku Generator</title>
+  <style>
+  td {
+  border:1px solid black;
+  width:20px;
+  height:20px;
+  text-align:center;
+  cursor:pointer;
+}
+
+.numberSelector {
+  background-color:blue;
+  color:yellow;
+  font-family:Arial,Sans-Serif;
+}
+.selectedNumber {
+  background-color:yellow;
+  color:blue;
+}
+
+  </style>
+  </head>
+<body>
+  <h1>Sudoku</h1>
+  <table id="sudokuTable">
+  </table>
+
+
+  <table>
+    <tr>
+      <td class="numberSelector">1</td>
+      <td class="numberSelector">2</td>
+      <td class="numberSelector">3</td>
+      <td class="numberSelector">4</td>
+      <td class="numberSelector">5</td>
+      <td class="numberSelector">6</td>
+      <td class="numberSelector">7</td>
+      <td class="numberSelector">8</td>
+      <td class="numberSelector">9</td>
+    </tr>
+  </table>
+  
+  <button type="button" onclick="createSudokuTable()">New</button>
+</body>
+</html>
+<script>
+function createSudokuTable() {
+    var htmlText = '';
+    for (var row = 1; row <= 9; row++) {
+        htmlText += '<tr>';
+        for (var column = 1; column <= 9; column++) {
+            htmlText += '<td class="sudokuCell" id="cell_' + row + '_' + column + '">&nbsp;</td>';
+        }
+        htmlText += '</tr>';
+    }
+    $('#sudokuTable').html(htmlText);
+	$('.sudokuCell').on('click', clicked);
+}
+var inputNumber = 1;
+function clicked() {
+    console.log(this);
+    cellId = this.id;
+    if ($('#' + cellId).text() == inputNumber) {
+        $('#' + cellId).text('&nbsp;');
+    } else {
+        $('#' + cellId).text(inputNumber);
+    }
+}
+
+
+
+function selectNumber() {
+    inputNumber = this.innerText;
+    $('.numberSelector').removeClass('selectedNumber');
+    $(this).addClass('selectedNumber');
+}
+
+
+$('.numberSelector').on('click', selectNumber);
+
+
+
+
+
+//function solveSudoku(size, grid) {
+  //var R = size
+  //var C = size
+  //var N = R * C
+  //var X = ([("rc", rc) for rc in ])
+//}
+</script>
