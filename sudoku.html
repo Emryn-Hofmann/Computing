@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="description" content="Generated Sudoku">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <script src="Zepto/zepto.min.js"></script>
+  <title>Sudoku Generator</title>
+  <style>
+  body {
+	font-size: x-large;
+	font-family: Arial, Sans-Serif;
+  }
+	table {
+  border-collapse: collapse;
+}
+td {
+  border:1px solid black;
+  width: 2em;
+  height: 2em;
+  text-align:center;
+  cursor:pointer;
+}
+
+#numberSelectorTable {
+  margin-top: 1em;
+}
+.numberSelector {
+  background-color:blue;
+  color:orange;
+  font-family:Arial,Sans-Serif;
+}
+.selectedNumber {
+  background-color:orange;
+  color:blue;
+}
+
+.button {
+    margin: auto;
+    display: block;
+    background-color: orange;
+    color: blue;
+    text-align: center;
+    font-size: 2vmin;
+}
+@media print {
+	#numberSelectorTable, .button {
+		display: none;
+	}
+}
+
+  </style>
+  </head>
+<body>
+  <h1 align=center>Sudoku</h1>
+  <table align=center id="sudokuTable">
+  </table>
+
+
+  <table align=center id="numberSelectorTable">
+    <tr>
+      <td class="numberSelector">1</td>
+      <td class="numberSelector">2</td>
+      <td class="numberSelector">3</td>
+      <td class="numberSelector">4</td>
+      <td class="numberSelector">5</td>
+      <td class="numberSelector">6</td>
+      <td class="numberSelector">7</td>
+      <td class="numberSelector">8</td>
+      <td class="numberSelector">9</td>
+    </tr>
+  </table>
+  
+  <button class="button" type="button" onclick="createSudokuTable()">New</button>
+</body>
+</html>
+<script>
+function createSudokuTable() {
+  var puzzle = [
+  [0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0]
+  ];
+  populateGrid(puzzle, 50);
+  var htmlText = '';
+  for (var row = 0; row <= 8; row++) {
+    htmlText += '<tr>';
+    for (var column = 0; column <= 8; column++) {
+      htmlText += '<td class="sudokuCell" id="cell_' + row + '_' + column + '">'+
+        (puzzle[row][column] === 0 ? "&nbsp;" : puzzle[row][column]) +
+        '</td>';
+    }
+    htmlText += '</tr>';
+  }
+  $('#sudokuTable').html(htmlText);
+  for (var row = 0; row <= 8; row++) {
+    $('#cell_'+row+'_0').css({"border-left": "3px solid black"})
+    $('#cell_'+row+'_2').css({"border-right": "3px solid black"})
+    $('#cell_'+row+'_5').css({"border-right": "3px solid black"})
+    $('#cell_'+row+'_8').css({"border-right": "3px solid black"})
+  }
+  for (var col = 0; col <= 8; col++) {
+    $('#cell_0_'+col).css({"border-top": "3px solid black"})
+    $('#cell_2_'+col).css({"border-bottom": "3px solid black"})
+    $('#cell_5_'+col).css({"border-bottom": "3px solid black"})
+    $('#cell_8_'+col).css({"border-bottom": "3px solid black"})
+  }
+  $('.sudokuCell').on('click', clicked);
+}
+
+var inputNumber = 1;
+
+function clicked() {
+    console.log(this);
+    cellId = this.id;
+    if ($('#' + cellId).text() == inputNumber) {
+        $('#' + cellId).text('\xa0'); //'\xa0' is &nbsp, but works, instead of output
+    } else {
+        $('#' + cellId).text(inputNumber);
+    }
+}
+
+
+
+function selectNumber() {
+    inputNumber = this.innerText;
+    $('.numberSelector').removeClass('selectedNumber');
+    $(this).addClass('selectedNumber');
+}
+
+$('.numberSelector').on('click', selectNumber);
+
+
+
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
+}
+
+
+
+function populateGrid(m, n) {
+  for (var cells = 0; cells < n; cells++) {
+    var randomRow = getRandomIntInclusive(0,8);
+    var randomColumn = getRandomIntInclusive(0,8);
+    var randomNumber = getRandomIntInclusive(1,9);
+    var isValid = checkCell(randomRow, randomColumn, m, randomNumber);
+    if (isValid) {
+      console.log("Placing " + randomNumber + " in row " + (randomRow+1) + " column " + (randomColumn+1))
+      m[randomRow][randomColumn] = randomNumber;
+    } else {
+      console.log("Cannot place " + randomNumber + " in row " + (randomRow+1) + " column " + (randomColumn+1))
+      cells--;
+    }
+  }
+}
+
+function checkCell (row, column, grid, numberToBeChecked) {
+  if (grid[row][column] !== 0) {
+    return false;
+  }
+  
+  //Check Column
+  for (var r=0; r<9;r++) {
+    if (numberToBeChecked === grid[r][column]) {
+      return false;
+    }
+  }
+  //Check Row
+  for (var col=0;col<9;col++) {
+    if (numberToBeChecked === grid[row][col]) {
+      return false;
+    }
+  }
+  //Check Box
+  var boxRow = 3*Math.floor(row/3);
+  var boxColumn = 3*Math.floor(column/3);
+  for (var r=0;r<3;r++) {
+    for (var c=0;c<3;c++) {
+      if (numberToBeChecked === grid[boxRow+r][boxColumn+c]) {
+        return false;
+      }
+    }
+  }
+  // If valid
+  return true;
+}
+
+createSudokuTable();
+</script>
